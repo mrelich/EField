@@ -8,6 +8,7 @@
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 
 #include "TMath.h"
+#include "Physics.h"
 
 class Dim1 
 {
@@ -16,9 +17,9 @@ class Dim1
   
   // Constructor/Destructor
   Dim1();
-  virtual ~Dim11();  
+  virtual ~Dim1();  
 
 
-}
+};
 
 #endif

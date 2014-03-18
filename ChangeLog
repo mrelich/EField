@@ -4,3 +4,4 @@
 	* Setting up structure
 	* Skeleton of code added
 	* First working version. Reproduced 100 GeV and 1TeV shower results.
+	* Added Analytic calculation with some gaussian shower smearing

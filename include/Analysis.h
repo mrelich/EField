@@ -30,7 +30,13 @@ class Analysis
 
   // Look at the profile averaged over many G4
   // showers in order to determine the E field
-  void Average1DResult();
+  void Average1DResult(TFile* outfile);
+
+  // Use the analytic approximation for 1-D 
+  // parameterization. This involves looking at
+  // the simple case around Cherenkov angle
+  // and applying a correction factor.
+  void Analytic1DResult(TFile* outfile);
 
   // Convert the TProfile for some results into
   // a simple vector<double>

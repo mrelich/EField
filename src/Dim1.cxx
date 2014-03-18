@@ -21,6 +21,11 @@ Dim1::Dim1() :
   // option later
   X0 = Phys::X0ICE;
 
+
+  // There is some frequency normalization parameter
+  // that needs to be set for the analytical 1-D 
+  // approximation
+  nu_0 =1015.;  // this is in MHz.
 }
 
 //-------------------------------------------------//
@@ -102,4 +107,63 @@ double Dim1::getP(double theta, double freq)
 
 }
 
+//-------------------------------------------------//
+// Get Analytic Rx|E|
+//-------------------------------------------------//
+double Dim1::getAnalyticRE(double theta, double freq, double showerE)
+{
 
+  // Get the analytic result for the cherenkov angle
+  double anaAtCherenkov = getAnalyticRE(freq,showerE);
+
+  // Now get the correction
+  double angleCorr = getAngleCorrection(theta,freq,showerE);
+
+  // Now return the result which is product
+  // following astro-ph/0003315
+  return anaAtCherenkov * angleCorr;  
+
+}
+
+//-------------------------------------------------//
+// Get Analytic Rx|E| at theta_Cherenkov
+//-------------------------------------------------//
+double Dim1::getAnalyticRE(double freq, double showerE)
+{
+
+  // Some constants following astro-ph/0003315
+  double C    = 2.53e-7;  // no units
+
+  // Calculate Eq.6 result
+  return C * (showerE/1.) * (freq/nu_0) * 1/(1+pow(freq/nu_0,1.44));
+
+}
+
+//-------------------------------------------------//
+// Get Correction factor
+//-------------------------------------------------//
+double Dim1::getAngleCorrection(double theta, double freq, double showerE)
+{
+
+  // Only real parameter is dTheta
+  double dTheta  = 1;
+  double theta_C = getThetaC();
+
+  // Shower energy is assumed to be in TeV
+  if(showerE < 1000) dTheta = 2.7 * (nu_0/freq) * pow(showerE, -0.03);
+  else{
+    // I don't know what to put for E_LPM if this is a known parameter
+    // or if it is something that I need to estimate/extract.  
+    // Ignore for now, since my showers are < 1 PeV.
+    cout<<"In Dim1::getAngleCorrection(...)"<<endl;
+    cout<<"The shower energy is currently not supported for 1D"<<endl;
+    cout<<"analytic calculation, which you are trying to use for"<<endl;
+    cout<<"Setting dTheta = 1, which should give bogus results"<<endl;
+    dTheta = 1;
+  }
+  double theta_diff = (theta-theta_C)/Phys::RAD_DEG;
+  double exponent = -1 * TMath::Log(2) * pow(theta_diff/dTheta,2);
+  
+  return TMath::Exp(exponent);   
+  
+}

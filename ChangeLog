@@ -3,3 +3,4 @@
 	* Creating package in order to derive electric field from shower profiles.
 	* Setting up structure
 	* Skeleton of code added
+	* First working version. Reproduced 100 GeV and 1TeV shower results.

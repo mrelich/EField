@@ -1,6 +1,7 @@
 2014-03-19 Matt:
 	* Adding TreeAnalyzer which can loop over simple trees made from G4 output
 	* Adding plotting scripts to format first results
+	* Tagging first version
 
 2014-03-18 Matt:
 	* Creating package in order to derive electric field from shower profiles.

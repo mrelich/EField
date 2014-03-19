@@ -17,6 +17,9 @@ Analysis::Analysis()
   // Create 1-D Analysis object
   m_dim1 = new Dim1();
 
+  // Create Tree analyzer
+  m_treeAna = new TreeAnalyzer();
+
 }
 
 //-----------------------------------------------//
@@ -26,6 +29,7 @@ Analysis::~Analysis()
 {
   
   delete m_dim1;
+  //delete m_treeAna;
 
 }
 
@@ -42,11 +46,13 @@ void Analysis::Average1DResult(TFile* outfile)
   vector<string> fnames;
   fnames.push_back(indir+"TrkAna_100_100000_ice_eBeam.root");
   fnames.push_back(indir+"TrkAna_20_1000000_ice_eBeam.root");
-
+  fnames.push_back(indir+"TrkAna_20_10000000_ice_eBeam.root");
+  
   // names to save
   vector<string> gnames;
   gnames.push_back("g4_100GeV");
   gnames.push_back("g4_1TeV");
+  gnames.push_back("g4_10TeV");
 
   // Set the profile name
   string pname      = "NPartDiff";
@@ -54,7 +60,7 @@ void Analysis::Average1DResult(TFile* outfile)
   // Get Rx|E| vs. Degree for constant freq
   float freq    = 300; // MHz
   int np        = 100;
-  float step    = 0.55;
+  float step    = 0.6;
   float theta_i = 25; // start at 25 degrees
   float theta[np];
   float RE[np];
@@ -115,15 +121,17 @@ void Analysis::Analytic1DResult(TFile* outfile)
   vector<double> showerEs; // in TeV
   showerEs.push_back(0.1); 
   showerEs.push_back(1);
+  showerEs.push_back(10);
 
   vector<string> gnames;
   gnames.push_back("ana_100GeV");
   gnames.push_back("ana_1TeV");
+  gnames.push_back("ana_10TeV");
 
   // Get Rx|E| vs. Degree for constant freq                                                                                        
   float freq    = 300; // MHz
   int np        = 100;
-  float step    = 0.55;
+  float step    = 0.6;
   float theta_i = 25;  // start at 25 degrees 
   float theta[np];
   float RE[np];  
@@ -174,6 +182,78 @@ vector<double> Analysis::convert(TProfile* prof)
 
 }
 
+//-----------------------------------------------//
+// Event by event result
+//-----------------------------------------------//
+void Analysis::Event1DResult(TFile* outfile)
+{
+
+  // specify file name
+  vector<string> fnames;
+  fnames.push_back("rootfiles/TrkTree_100_100000_ice_eBeam.root");
+  fnames.push_back("rootfiles/TrkTree_20_1000000_ice_eBeam.root");
+  //fnames.push_back("rootfiles/TrkTree_20_10000000_ice_eBeam.root");
+
+  vector<string> gnames;
+  gnames.push_back("g4_100GeV_event");
+  gnames.push_back("g4_1TeV_event");
+  gnames.push_back("g4_10TeV_event");
+
+  // Loop over files
+  for(uint f=0; f<fnames.size(); ++f){
+    string fname = fnames.at(f);
+    string gname = gnames.at(f);
+
+    // Pass tree to tree analyzer
+    m_treeAna->initialize(fname);
+    
+    // Place holders
+    float freq    = 300; // MHz
+    int np        = 100;
+    float step    = 0.6;
+    float theta_i = 25;  // start at 25 degrees 
+    float theta[np];
+    float RE[np];
+    
+    // Specify the step size for getting charge
+    // distribution.
+    float stepSize = 0.5;
+    
+    // Load first charge profile
+    vector<double> Qz (20,0);
+    m_treeAna->getNextQz(stepSize, Qz);
+    
+    // Now loop for as long as the length is not zero
+    int count = 0;
+    while( Qz.size() != 0 ){
+
+      // Loop and calculate electric field
+      for(int i=0; i<np; ++i){
+	theta[i] = theta_i + step*i;
+	RE[i] = m_dim1->getRE(theta[i]/Phys::DEG_RAD,
+			      freq,
+			      Qz,
+			      stepSize);
+      }// end loop over points       
+      
+      // Make TGraph and save
+      outfile->cd();
+      TGraph* gr = new TGraph(np,theta,RE);
+      gr->SetName(Form("%s_%i",gname.c_str(),count));
+      gr->Write();
+      delete gr;
+      
+      // Increment counter and get next charge
+      count++;
+      m_treeAna->getNextQz(stepSize, Qz);
+      
+    }// end while loop
+
+    m_treeAna->finalize();
+  
+  }// end loop over files
+
+}
 
 //********************************************************************//
 //                 --- END OF ANALYSIS CODE ---                       //
@@ -195,7 +275,8 @@ int main(int argc, char** argv)
   // Execute commands
   ana->Average1DResult(outfile);
   ana->Analytic1DResult(outfile);
-  
+  ana->Event1DResult(outfile);
+
   // Clean up, we're done here.
   outfile->Write();
   outfile->Close();

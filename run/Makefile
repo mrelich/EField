@@ -42,12 +42,14 @@ obj/%.so: $(src)/%.cxx
 #	$(CXX) -c $< -o $@ $(SOFLAGS) $(CXXFLAGS) -Os -g1 -I$(ELS_ana)
 
 #---- Additional Objects ----#
+obj/TreeAnalyzer.so:	$(inc)/TreeAnalyzer.h
 obj/Dim1.so:		$(inc)/Dim1.h 
 obj/Analysis.so:	$(inc)/Analysis.h
 
 #---- Analysis Code ----#
-analysis: 		\
-	obj/Dim1.so	\
+analysis: 			\
+	obj/TreeAnalyzer.so 	\
+	obj/Dim1.so		\
 	obj/Analysis.so	
 	$(CXX) $+ -o $@ $(CXXFLAGS) $(LDFLAGS) $(links)
 

@@ -9,6 +9,7 @@
 
 // My goodies
 #include "Dim1.h"
+#include "TreeAnalyzer.h"
 
 // Root shiz
 #include "TFile.h"
@@ -38,13 +39,24 @@ class Analysis
   // and applying a correction factor.
   void Analytic1DResult(TFile* outfile);
 
+  // Method to look at the 1-D parameterization
+  // on an event by event basis.
+  void Event1DResult(TFile* outfile);
+
   // Convert the TProfile for some results into
   // a simple vector<double>
   std::vector<double> convert(TProfile* prof);
 
+  // Simple print method
+  void print(std::vector<double> v){
+    for(uint i=0; i<v.size(); ++i)
+      std::cout<<"i: "<<i<<" "<<v.size()<<std::endl;
+  };
+
  private:
   
-  Dim1* m_dim1; // 1*D ana object
+  Dim1* m_dim1;            // 1*D ana object
+  TreeAnalyzer* m_treeAna; // Analyze Tree object
 
 };
 

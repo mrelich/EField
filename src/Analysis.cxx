@@ -260,11 +260,48 @@ void Analysis::Event1DResult(TFile* outfile)
 //********************************************************************//
 
 //-----------------------------------------------//
+// Help Menu
+//-----------------------------------------------//
+void help()
+{
+
+  cout<<endl;
+  cout<<"**********************************"<<endl;
+  cout<<"Help Menu"                         <<endl;
+  cout<<"-a 1D vs. Theta using Avg Profile "<<endl;
+  cout<<"-b 1D vs. Theta using Analytic Est"<<endl;
+  cout<<"-c 1D vs. Theta from profiles on  "<<endl;
+  cout<<"\tan event by event basis."        <<endl;
+  cout<<"*******************************"<<endl;
+  cout<<endl;
+
+
+}
+
+//-----------------------------------------------//
 // Main
 //-----------------------------------------------//
 int main(int argc, char** argv)
 {
  
+  // Define options
+  bool run1DVsTheta      = false;
+  bool run1DVsThetaAna   = false;
+  bool run1DVsThetaEvent = false;
+
+  // Loop over options
+  for(int i=1; i<argc; ++i){
+    if( strcmp(argv[i], "-a") == 0 )
+      run1DVsTheta = true;
+    else if( strcmp(argv[i], "-b") == 0 )
+      run1DVsThetaAna = true;
+    else if( strcmp(argv[i], "-c") == 0 )
+      run1DVsThetaEvent = true;
+    else{
+      help();
+      return 0;
+    }
+  }// end loop over options
 
   // Create Ana object
   Analysis* ana = new Analysis();
@@ -273,9 +310,9 @@ int main(int argc, char** argv)
   TFile* outfile = new TFile("../results/AnaOutput.root","recreate");
   
   // Execute commands
-  ana->Average1DResult(outfile);
-  ana->Analytic1DResult(outfile);
-  ana->Event1DResult(outfile);
+  if(run1DVsTheta)      ana->Average1DResult(outfile);
+  if(run1DVsThetaAna)   ana->Analytic1DResult(outfile);
+  if(run1DVsThetaEvent) ana->Event1DResult(outfile);
 
   // Clean up, we're done here.
   outfile->Write();

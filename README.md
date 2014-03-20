@@ -42,8 +42,16 @@ TreeAnalyzer -- In order to do the event by event
 ##########################################
 
 After compiling, the executable 'analysis'
-will appear.  There are currently no options.
-The user needs to toggle them off in 'main'
-which can be found in Analysis.  I will update
-this in the future as package grows
+will appear.  There are three options the user
+can use to run the program:
+
+-a  --  This will make the Rx|E| vs Theta using
+    	the average profile produced from TrackAna.py
+-b  --  This will make Rx|E|vs Theta using the 
+    	simple expression valid around the 
+	Cherenkov angle.
+-c  --  Make Rx|E| vs Theta using event-by-event
+    	profiles that are calculated from a simple
+	TTree. In IceBlock, the code is makeNtuple.py
+	It contains very simple structure.
 

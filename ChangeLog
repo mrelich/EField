@@ -1,3 +1,6 @@
+2014-03-20 Matt:
+	* Updating README
+
 2014-03-19 Matt:
 	* Adding TreeAnalyzer which can loop over simple trees made from G4 output
 	* Adding plotting scripts to format first results

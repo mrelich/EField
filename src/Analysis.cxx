@@ -307,7 +307,8 @@ int main(int argc, char** argv)
   Analysis* ana = new Analysis();
 
   // Create an output for this run
-  TFile* outfile = new TFile("../results/AnaOutput.root","recreate");
+  //TFile* outfile = new TFile("../results/AnaOutput.root","recreate");
+  TFile* outfile = new TFile("../results/AnaOutput_Mar25.root","recreate");
   
   // Execute commands
   if(run1DVsTheta)      ana->Average1DResult(outfile);

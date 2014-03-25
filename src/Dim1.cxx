@@ -25,7 +25,8 @@ Dim1::Dim1() :
   // There is some frequency normalization parameter
   // that needs to be set for the analytical 1-D 
   // approximation
-  nu_0 =1015.;  // this is in MHz.
+  //nu_0 =1015.;  // this is in MHz.
+  nu_0 =500.;  // this is in MHz. from astro-ph/9706064 
 }
 
 //-------------------------------------------------//
@@ -132,10 +133,16 @@ double Dim1::getAnalyticRE(double freq, double showerE)
 {
 
   // Some constants following astro-ph/0003315
-  double C    = 2.53e-7;  // no units
-
+  //double C    = 2.53e-7;  // no units
   // Calculate Eq.6 result
-  return C * (showerE/1.) * (freq/nu_0) * 1/(1+pow(freq/nu_0,1.44));
+  //return C * (showerE/1.) * (freq/nu_0) * 1/(1+pow(freq/nu_0,1.44));
+
+  // UPDATE TO USING astro-ph/9706064 
+  // Some constants following astro-ph/9706064
+  double C = 1.1e-7;
+
+  // Now calculate Eq.1 from  astro-ph/9706064
+  return C * (showerE/1.) * (freq/nu_0) * 1/(1+0.4*pow(freq/nu_0,2));
 
 }
 
@@ -150,7 +157,7 @@ double Dim1::getAngleCorrection(double theta, double freq, double showerE)
   double theta_C = getThetaC();
 
   // Shower energy is assumed to be in TeV
-  if(showerE < 1000) dTheta = 2.7 * (nu_0/freq) * pow(showerE, -0.03);
+  if(showerE < 1000) dTheta = 2.7 * (nu_0/freq) * pow(showerE/1000, -0.03);
   else{
     // I don't know what to put for E_LPM if this is a known parameter
     // or if it is something that I need to estimate/extract.  

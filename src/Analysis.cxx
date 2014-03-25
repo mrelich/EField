@@ -44,9 +44,9 @@ void Analysis::Average1DResult(TFile* outfile)
   // Open up a root file. Hardcode for now, but
   // make it an option later
   vector<string> fnames;
-  fnames.push_back(indir+"TrkAna_100_100000_ice_eBeam.root");
-  fnames.push_back(indir+"TrkAna_20_1000000_ice_eBeam.root");
-  fnames.push_back(indir+"TrkAna_20_10000000_ice_eBeam.root");
+  fnames.push_back(indir+"TrkAna_100_100000_ice_eBeam_1MeV.root");
+  fnames.push_back(indir+"TrkAna_50_1000000_ice_eBeam_1MeV.root");
+  fnames.push_back(indir+"TrkAna_20_10000000_ice_eBeam_1MeV.root");
   
   // names to save
   vector<string> gnames;
@@ -191,7 +191,7 @@ void Analysis::Event1DResult(TFile* outfile)
   // specify file name
   vector<string> fnames;
   fnames.push_back("rootfiles/TrkTree_100_100000_ice_eBeam.root");
-  fnames.push_back("rootfiles/TrkTree_20_1000000_ice_eBeam.root");
+  //fnames.push_back("rootfiles/TrkTree_50_1000000_ice_eBeam.root");
   //fnames.push_back("rootfiles/TrkTree_20_10000000_ice_eBeam.root");
 
   vector<string> gnames;
@@ -272,7 +272,7 @@ void help()
   cout<<"-b 1D vs. Theta using Analytic Est"<<endl;
   cout<<"-c 1D vs. Theta from profiles on  "<<endl;
   cout<<"\tan event by event basis."        <<endl;
-  cout<<"*******************************"<<endl;
+  cout<<"**********************************"<<endl;
   cout<<endl;
 
 

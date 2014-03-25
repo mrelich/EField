@@ -39,7 +39,7 @@ void TreeAnalyzer::initialize(string fname)
 
   // Open the file
   m_file = new TFile(fname.c_str());
-
+  
   // Set the tree
   m_tree = (TTree*) m_file->Get("ntuple");
 

@@ -8,7 +8,8 @@ CFLAGS		= -pipe -g \
 -D __SKIP_CLASS_DEF__ \
 -I.. \
 -Wall -Wextra -Winit-self -Wcast-align -Wno-comment -Wno-ignored-qualifiers \
--O2 -march=native -mfpmath=sse -fPIC 
+-O2 -march=native -mfpmath=sse -fPIC \
+-Wl,--no-as-needed
 
 #---- Paths ----#
 inc = ../include
@@ -29,7 +30,6 @@ Physics.h
 Targets = analysis
 
 all: Makefile $(Targets)
-
 
 obj/%.so: $(src)/%.cxx
 	$(CXX) -c $< -o $@ $(SOFLAGS) $(CXXFLAGS) $(links)

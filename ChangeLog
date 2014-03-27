@@ -1,5 +1,7 @@
 2014-03-27 Matt:
 	* Adding Shower profile script
+	* Updating how to specify input files for Analysis.  Still don't like it...
+	* Adding toy example to show Q excess max has affect on angular dependence.
 
 2014-03-25 Matt:
 	* Updating Makefile and some code after debugging

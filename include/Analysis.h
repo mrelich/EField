@@ -58,6 +58,11 @@ class Analysis
   Dim1* m_dim1;            // 1*D ana object
   TreeAnalyzer* m_treeAna; // Analyze Tree object
 
+  std::vector<std::string> m_fnames; // File names to consider
+  std::vector<std::string> m_gnames; // Names to save graphs
+  std::vector<std::string> m_tnames; // File names for trees
+  std::vector<std::string> m_tgnames; // Names to save graphs for tree plots
+  
 };
 
 #endif

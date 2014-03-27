@@ -1,3 +1,10 @@
+2014-03-27 Matt:
+	* Adding Shower profile script
+
+2014-03-25 Matt:
+	* Updating Makefile and some code after debugging
+	* Fixing Dim1.cxx for analytic parameterization. Mixed two papers got wrong result.
+
 2014-03-20 Matt:
 	* Updating README
 	* Added runtime options for Analysis. Annoyed that I hadn't done it yet..

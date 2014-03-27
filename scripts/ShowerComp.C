@@ -14,20 +14,48 @@ TString freq = "f = 300 MHz";
 //---------------------------------------------//
 // Main
 //---------------------------------------------//
-void Plot()
+void ShowerComp(int opt)
 {
   
   //m_file = new TFile("../results/AnaOutput.root");
   m_file = new TFile("../results/AnaOutput_Mar25.root");
 
-  basic();
-  //event();
+  // Holders for graphs and graph names
+  vector<TString> gnames;
+  vector<TString> names;
+  TString energy = "";
+
+  // Choose the energy to look at
+  if( opt == 0 ){
+    gnames.push_back("g4_100GeV");
+    gnames.push_back("g4_10GeV_np10");
+
+    names.push_back("1 e^{-} @ 100GeV");
+    names.push_back("10 e^{-} @ 10GeV");
+    
+    energy = "100GeV";
+  }
+  else if( opt == 1 ){
+    gnames.push_back("g4_1TeV");
+    gnames.push_back("g4_100GeV_np10");
+    gnames.push_back("g4_10GeV_np100");
+    
+    names.push_back("1 e^{-} @ 1TeV");
+    names.push_back("10 e^{-} @ 100GeV");
+    names.push_back("100 e^{-} @ 10GeV");
+
+    energy = "1TeV";
+  }
+
+  basic(gnames,names,energy);
 }
 
 //---------------------------------------------//
 // Plot basic
 //---------------------------------------------//
-void basic()
+void basic(vector<TString> gnames,
+	   vector<TString> names,
+	   TString energy)
 {
 
   // Get Canvas
@@ -51,26 +79,8 @@ void basic()
   TLatex* lat = makeLatex();
   lat->DrawLatex(0.7,0.88,freq.Data());
   
-  // Graphs to plot
-  vector<TString> gnames;
-  gnames.push_back("g4_100GeV");
-  gnames.push_back("g4_1TeV");
-  gnames.push_back("g4_10TeV");
-  gnames.push_back("ana_100GeV");
-  gnames.push_back("ana_1TeV");
-  gnames.push_back("ana_10TeV");
-
   // Line Styles
   int styles[] = {1,1,1,2,2,2};
-
-  // Names for legend
-  vector<TString> names;
-  names.push_back("G4 1D Approx: 100 GeV");
-  names.push_back("G4 1D Approx: 1 TeV");
-  names.push_back("G4 1D Approx: 10 TeV");
-  names.push_back("Analytic Approx: 100 GeV");
-  names.push_back("Analytic Approx: 1 TeV");
-  names.push_back("Analytic Approx: 10 TeV");
 
   // Loop and plot
   for(unsigned int i=0; i<gnames.size(); ++i){
@@ -84,7 +94,7 @@ void basic()
 
   leg->Draw("same");
 
-  c->SaveAs(("../plots/RE_vs_obsAngle.png"));
+  c->SaveAs(("../plots/ShowerComp_RE_vs_ObsAngle_"+energy+".png"));
 
 }
 

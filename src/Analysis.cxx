@@ -20,6 +20,45 @@ Analysis::Analysis()
   // Create Tree analyzer
   m_treeAna = new TreeAnalyzer();
 
+  // Specify the directory where the Geant4 output is located
+  string indir = "rootfiles/";
+
+  // Initialize the file names to look at
+  m_fnames.push_back(indir+"TrkAna_100_100000_ice_eBeam_1MeV.root");
+  m_fnames.push_back(indir+"TrkAna_50_1000000_ice_eBeam_1MeV.root");
+  m_fnames.push_back(indir+"TrkAna_20_10000000_ice_eBeam_1MeV.root");
+  m_fnames.push_back(indir+"TrkAna_100_10000_ice_eBeam_np10_1MeV.root");
+  m_fnames.push_back(indir+"TrkAna_50_100000_ice_eBeam_np10_1MeV.root");
+  m_fnames.push_back(indir+"TrkAna_50_10000_ice_eBeam_np100_1MeV.root");
+
+  // Initialize the output graph names
+  m_gnames.push_back("g4_100GeV");
+  m_gnames.push_back("g4_1TeV");
+  m_gnames.push_back("g4_10TeV");
+
+  m_gnames.push_back("g4_10GeV_np10");
+  m_gnames.push_back("g4_100GeV_np10");
+  m_gnames.push_back("g4_10GeV_np100");
+
+  // Initialize the file names to look at
+  m_tnames.push_back(indir+"TrkTree_100_100000_ice_eBeam.root");
+  m_tnames.push_back(indir+"TrkTree_50_1000000_ice_eBeam.root");
+  m_tnames.push_back(indir+"TrkTree_20_10000000_ice_eBeam.root");
+  m_tnames.push_back(indir+"TrkTree_100_10000_ice_eBeam_np10.root");
+  m_tnames.push_back(indir+"TrkTree_50_100000_ice_eBeam_np10.root");
+  m_tnames.push_back(indir+"TrkTree_50_10000_ice_eBeam_np100.root");
+
+  // Initialize the output graph names
+  m_tgnames.push_back("g4_100GeV_event");
+  m_tgnames.push_back("g4_1TeV_event");
+  m_tgnames.push_back("g4_10TeV_event");
+
+  m_tgnames.push_back("g4_10GeV_np10_event");
+  m_tgnames.push_back("g4_100GeV_np10_event");
+  m_tgnames.push_back("g4_10GeV_np100_event");
+
+
+
 }
 
 //-----------------------------------------------//
@@ -39,21 +78,6 @@ Analysis::~Analysis()
 void Analysis::Average1DResult(TFile* outfile)
 {
 
-  string indir = "rootfiles/";
-
-  // Open up a root file. Hardcode for now, but
-  // make it an option later
-  vector<string> fnames;
-  fnames.push_back(indir+"TrkAna_100_100000_ice_eBeam_1MeV.root");
-  fnames.push_back(indir+"TrkAna_50_1000000_ice_eBeam_1MeV.root");
-  fnames.push_back(indir+"TrkAna_20_10000000_ice_eBeam_1MeV.root");
-  
-  // names to save
-  vector<string> gnames;
-  gnames.push_back("g4_100GeV");
-  gnames.push_back("g4_1TeV");
-  gnames.push_back("g4_10TeV");
-
   // Set the profile name
   string pname      = "NPartDiff";
 
@@ -67,9 +91,9 @@ void Analysis::Average1DResult(TFile* outfile)
 
   // Load profiles and save electric field
   TFile* infile  = NULL;
-  for(uint f=0; f<fnames.size(); ++f){
-    string fname = fnames.at(f);
-    string gname = gnames.at(f);
+  for(uint f=0; f<m_fnames.size(); ++f){
+    string fname = m_fnames.at(f);
+    string gname = m_gnames.at(f);
     
     // Open file
     infile = new TFile(fname.c_str());
@@ -188,21 +212,10 @@ vector<double> Analysis::convert(TProfile* prof)
 void Analysis::Event1DResult(TFile* outfile)
 {
 
-  // specify file name
-  vector<string> fnames;
-  fnames.push_back("rootfiles/TrkTree_100_100000_ice_eBeam.root");
-  //fnames.push_back("rootfiles/TrkTree_50_1000000_ice_eBeam.root");
-  //fnames.push_back("rootfiles/TrkTree_20_10000000_ice_eBeam.root");
-
-  vector<string> gnames;
-  gnames.push_back("g4_100GeV_event");
-  gnames.push_back("g4_1TeV_event");
-  gnames.push_back("g4_10TeV_event");
-
   // Loop over files
-  for(uint f=0; f<fnames.size(); ++f){
-    string fname = fnames.at(f);
-    string gname = gnames.at(f);
+  for(uint f=0; f<m_tnames.size(); ++f){
+    string fname = m_tnames.at(f);
+    string gname = m_tgnames.at(f);
 
     // Pass tree to tree analyzer
     m_treeAna->initialize(fname);

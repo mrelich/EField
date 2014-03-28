@@ -56,20 +56,30 @@ ToyShowerExample()
   x0s.push_back("32");
   x0s.push_back("38");
 
-  vector<TString> norms;
-  norms.push_back("400");
-  norms.push_back("400");
-  norms.push_back("400");
-  norms.push_back("400");
-  norms.push_back("400");
-  norms.push_back("400");
-  norms.push_back("400");
+  /*  x0s.push_back("14");
+  x0s.push_back("14");
+  x0s.push_back("14");
+  x0s.push_back("14");
+  x0s.push_back("14");
+  x0s.push_back("14");
+  x0s.push_back("14");
+  */
+
+  vector<TString> pars;
+  pars.push_back("4");
+  pars.push_back("4");
+  pars.push_back("4");
+  pars.push_back("4");
+  pars.push_back("4");
+  pars.push_back("4");
+  pars.push_back("4");
+
 
   // Draw the gaussians
-  drawGaussians(x0s, norms);
+  //drawGaussians(x0s, pars);
 
   // THe main event
-  //drawIntegralResult(x0s, norms);
+  drawIntegralResult(x0s, pars);
 
 }
 
@@ -77,7 +87,7 @@ ToyShowerExample()
 // Draw the gaussians to be integrated
 //----------------------------------------//
 void drawGaussians(vector<TString> x0s,
-		   vector<TString> norms)
+		   vector<TString> pars)
 {
   
   // Make canvas
@@ -88,15 +98,21 @@ void drawGaussians(vector<TString> x0s,
   TString ytitle = "N(e-p)";
 
   // Get histograms
-  TH1F* hist = NULL;
+  TH1F* hists[10];
+  float maximum = -999;
   for(unsigned int i=0; i<x0s.size(); ++i){
-    hist = makeGaussian(x0s.at(i),norms.at(i));
-    setAtt(hist,xtitle,ytitle,m_colors[i]);
-    if( i == 0) hist->Draw();
-    else        hist->Draw("same");
+    hists[i] = makeGaussian(x0s.at(i),pars.at(i));
+    setAtt(hists[i],xtitle,ytitle,m_colors[i]);
   }
 
+  //hists[0]->SetMaximum(1.2*maximum);
+  hists[0]->Draw();
+  for(unsigned int i=1; i<x0s.size(); ++i)
+    hists[i]->Draw("same");
+
   c->SaveAs((savedir+"inputGaussian.png").Data());
+  //c->SaveAs((savedir+"inputGaussian_varHeight.png").Data());
+  //c->SaveAs((savedir+"inputGaussian_varWidth.png").Data());
 
 }
 
@@ -123,7 +139,7 @@ void setAtt(TH1F* &h, TString x, TString y,
 // hypothesis
 //----------------------------------------//
 void drawIntegralResult(vector<TString> x0s,
-			vector<TString> norms)
+			vector<TString> pars)
 {
 
   // Make a canvas
@@ -144,7 +160,7 @@ void drawIntegralResult(vector<TString> x0s,
   float theta_i = 25;
 
   // Make Legend
-  TLegend* leg = makeLegend(0.15,0.3,0.55,0.92);
+  TLegend* leg = makeLegend(0.15,0.35,0.55,0.92);
   leg->Clear();
   leg->SetHeader("Gaussian Center");
 
@@ -153,7 +169,7 @@ void drawIntegralResult(vector<TString> x0s,
   for(unsigned int i=0; i<x0s.size(); ++i){
     
     // Get the charge profile
-    TH1F* Qz = makeGaussian(x0s.at(i),norms.at(i));
+    TH1F* Qz = makeGaussian(x0s.at(i),pars.at(i));
     
     // Make placeholders for the graph
     float theta[np];
@@ -181,6 +197,7 @@ void drawIntegralResult(vector<TString> x0s,
     gr->Draw("same");
 
     leg->AddEntry(gr,("x_{0}= "+x0s.at(i)+"X_{0}").Data(),"l");
+    //leg->AddEntry(gr,("#sigma^{2} = "+pars.at(i)).Data(),"l");
   }
 
   // Draw legend
@@ -188,6 +205,8 @@ void drawIntegralResult(vector<TString> x0s,
 
   // Save
   c->SaveAs((savedir+"EfieldFromGaussians.png").Data());
+  //c->SaveAs((savedir+"EfieldFromGaussians_varHeight.png").Data());
+  //c->SaveAs((savedir+"EfieldFromGaussians_varWidth.png").Data());
 }
 
 //----------------------------------------//
@@ -233,19 +252,23 @@ double getP(double theta)
 // Make Gaussian hist centered at 
 // a variable point
 //----------------------------------------//
-TH1F* makeGaussian(TString x0, TString norm)
+TH1F* makeGaussian(TString x0, TString par)
 {
 
   // make histogram
-  TH1F* hist = new TH1F(("hist_"+x0).Data(),"",nbins,min,max);
+  TH1F* hist = new TH1F(("hist_"+x0+"_"+par).Data(),"",nbins,min,max);
   
   // Make gaussian function
-  TString f = norm+"*exp(-((x-"+x0+")**2)/9)";
-  TF1 gaus = TF1("func",f.Data(),0,20);
+  TString f = "exp(-0.5*((x-"+x0+")**2)/"+par+")";
+  TF1 gaus = TF1("func",f.Data(),0,max);
 
   // Fill histogram and return
-  hist->FillRandom("func",10000);
-
+  float nEvt = 10000;
+  hist->FillRandom("func",nEvt);
+  //float sf = norm / hist->GetMaximum();
+  //hist->Scale(sf);
+  //hist->Scale(1/sqrt(nEvt));
+  cout<<"int; "<<hist->Integral()<<endl;
   return hist;
 
 }

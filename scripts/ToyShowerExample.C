@@ -13,7 +13,8 @@ const int nbins = 40;
 const float min = 0;
 const float max = 20;
 
-const float X0 = 39.0522; // Radiation length in ice
+//const float X0 = 39.0522; // Radiation length in ice
+const float X0 = 0.390522; // Radiation length in ice
 
 const int m_colors[] = {kBlack, kRed, kBlue, kMagenta,
 			kGreen+3,
@@ -27,12 +28,23 @@ float freq    = 300000; // Hz
 float pi      = TMath::Pi();
 float nICE    = 1.79; // index of refraction
 float c_speed = 3e8;  // speed of light
+double DEG_RAD = 57.2957795;
+double e0  = 8.8541e-12;  // Permitivity of Free space
+double c2  = c_speed*c_speed;         // c^2 is used quite a bit
+double e   = 1.602e-19;   // Electron charge coloumbs
+
+// Const
+double RE_const = 0;
 
 //----------------------------------------//
 // Main
 //----------------------------------------//
 ToyShowerExample()
 {
+
+  // Specify the const
+  RE_const = (e) / 
+    (2 * pi * e0 * c2);
 
   // Specify the initial positions of the gaussian
   vector<TString> x0s;
@@ -76,7 +88,7 @@ void drawGaussians(vector<TString> x0s)
     else        hist->Draw("same");
   }
 
-  c->SaveAs((savedir+"inputGaussian.png").Data());
+  //c->SaveAs((savedir+"inputGaussian.png").Data());
 
 }
 
@@ -142,10 +154,10 @@ void drawIntegralResult(vector<TString> x0s)
       // Get integral results
       double real = excessInt(P,Qz,true);
       double imag = excessInt(P,Qz,false);
-      RE[p]       = sqrt(real*real+imag*imag) * -1*TMath::Sin(theta[p]);
+      RE[p]       = RE_const * 2*pi*freq * sqrt(real*real+imag*imag) * TMath::Sin(theta[p]/DEG_RAD);
     }// end loop over angles
     
-    cout<<"Working on "<<x0s.at(i)<<" with "<< RE[50] << endl;
+    cout<<"Working on "<<x0s.at(i)<<" with "<< RE[0] << endl;
 
     TGraph* gr = new TGraph(np,theta,RE);
     gr->SetLineColor(m_colors[i]);
@@ -191,7 +203,7 @@ double excessInt(double p, TH1F* Qz, bool isReal)
 double getP(double theta)
 {
 
-  return 2*pi*freq*(1-nICE*TMath::Cos(theta))/c_speed;
+  return 2*pi*freq*(1-nICE*TMath::Cos(theta/DEG_RAD))/c_speed;
 
 }
 
@@ -206,7 +218,7 @@ TH1F* makeGaussian(TString x0)
   TH1F* hist = new TH1F(("hist_"+x0).Data(),"",nbins,min,max);
   
   // Make gaussian function
-  TString f = "exp(-(x-"+x0+")**2)";
+  TString f = "exp(-((x-"+x0+")**2))";
   TF1 gaus = TF1("func",f.Data(),0,20);
 
   // Fill histogram and return

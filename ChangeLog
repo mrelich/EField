@@ -1,3 +1,6 @@
+2014-04-03 Matt:
+	* Adding script to check for transition radiation.  Simple plotting macro in scripts/
+
 2014-03-28 Matt:
 	* Updated toy example.  Results are now understandable. Technical issue.
 	* One last update to be able to manually set the width of gaussian. this is issue

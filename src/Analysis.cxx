@@ -25,11 +25,11 @@ Analysis::Analysis()
 
   // Initialize the file names to look at
   m_fnames.push_back(indir+"TrkAna_100_100000_ice_eBeam_1MeV.root");
-  m_fnames.push_back(indir+"TrkAna_50_1000000_ice_eBeam_1MeV.root");
-  m_fnames.push_back(indir+"TrkAna_20_10000000_ice_eBeam_1MeV.root");
-  m_fnames.push_back(indir+"TrkAna_100_10000_ice_eBeam_np10_1MeV.root");
-  m_fnames.push_back(indir+"TrkAna_50_100000_ice_eBeam_np10_1MeV.root");
-  m_fnames.push_back(indir+"TrkAna_50_10000_ice_eBeam_np100_1MeV.root");
+  //m_fnames.push_back(indir+"TrkAna_50_1000000_ice_eBeam_1MeV.root");
+  //m_fnames.push_back(indir+"TrkAna_20_10000000_ice_eBeam_1MeV.root");
+  //m_fnames.push_back(indir+"TrkAna_100_10000_ice_eBeam_np10_1MeV.root");
+  //m_fnames.push_back(indir+"TrkAna_50_100000_ice_eBeam_np10_1MeV.root");
+  //m_fnames.push_back(indir+"TrkAna_50_10000_ice_eBeam_np100_1MeV.root");
 
   // Initialize the output graph names
   m_gnames.push_back("g4_100GeV");
@@ -42,11 +42,11 @@ Analysis::Analysis()
 
   // Initialize the file names to look at
   m_tnames.push_back(indir+"TrkTree_100_100000_ice_eBeam.root");
-  m_tnames.push_back(indir+"TrkTree_50_1000000_ice_eBeam.root");
-  m_tnames.push_back(indir+"TrkTree_20_10000000_ice_eBeam.root");
-  m_tnames.push_back(indir+"TrkTree_100_10000_ice_eBeam_np10.root");
-  m_tnames.push_back(indir+"TrkTree_50_100000_ice_eBeam_np10.root");
-  m_tnames.push_back(indir+"TrkTree_50_10000_ice_eBeam_np100.root");
+  //m_tnames.push_back(indir+"TrkTree_50_1000000_ice_eBeam.root");
+  //m_tnames.push_back(indir+"TrkTree_20_10000000_ice_eBeam.root");
+  //m_tnames.push_back(indir+"TrkTree_100_10000_ice_eBeam_np10.root");
+  //m_tnames.push_back(indir+"TrkTree_50_100000_ice_eBeam_np10.root");
+  //m_tnames.push_back(indir+"TrkTree_50_10000_ice_eBeam_np100.root");
 
   // Initialize the output graph names
   m_tgnames.push_back("g4_100GeV_event");

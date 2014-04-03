@@ -47,7 +47,7 @@ double Dim1::getRE(double theta, double freq,
 
   // Get p for this freq and angle
   double p = getP(theta,freq);
-
+  cout<<"Theta: "<<theta/Phys::RAD_DEG<<" p: "<<p<<endl;
   // Get real and imaginary part for charge integral
   double real = excessInt(p, Qz, step, true);
   double imag = excessInt(p, Qz, step, false);

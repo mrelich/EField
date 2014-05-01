@@ -48,31 +48,38 @@ ToyShowerExample()
 
   // Specify the initial positions of the gaussian
   vector<TString> x0s;
-  x0s.push_back("2");
+  /*x0s.push_back("2");
   x0s.push_back("8");
   x0s.push_back("14");
   x0s.push_back("20");
   x0s.push_back("26");
   x0s.push_back("32");
-  x0s.push_back("38");
+  x0s.push_back("38");*/
 
-  /*  x0s.push_back("14");
   x0s.push_back("14");
   x0s.push_back("14");
   x0s.push_back("14");
   x0s.push_back("14");
   x0s.push_back("14");
   x0s.push_back("14");
-  */
+  x0s.push_back("14");
+  
 
   vector<TString> pars;
+  /*pars.push_back("4");
   pars.push_back("4");
   pars.push_back("4");
   pars.push_back("4");
   pars.push_back("4");
   pars.push_back("4");
+  pars.push_back("4");*/
+  pars.push_back("2");
   pars.push_back("4");
-  pars.push_back("4");
+  pars.push_back("8");
+  pars.push_back("10");
+  pars.push_back("12");
+  pars.push_back("14");
+  pars.push_back("16");
 
 
   // Draw the gaussians
@@ -110,7 +117,7 @@ void drawGaussians(vector<TString> x0s,
   for(unsigned int i=1; i<x0s.size(); ++i)
     hists[i]->Draw("same");
 
-  c->SaveAs((savedir+"inputGaussian.png").Data());
+  //c->SaveAs((savedir+"inputGaussian.png").Data());
   //c->SaveAs((savedir+"inputGaussian_varHeight.png").Data());
   //c->SaveAs((savedir+"inputGaussian_varWidth.png").Data());
 
@@ -162,7 +169,8 @@ void drawIntegralResult(vector<TString> x0s,
   // Make Legend
   TLegend* leg = makeLegend(0.15,0.35,0.55,0.92);
   leg->Clear();
-  leg->SetHeader("Gaussian Center");
+  //leg->SetHeader("Gaussian Center");
+  leg->SetHeader("Gaussian #sigma^{2}");
 
   // Then integrate the profiles according to Jaime's 
   // paper and make a Graph of the results.
@@ -196,17 +204,17 @@ void drawIntegralResult(vector<TString> x0s,
     gr->SetLineWidth(2);
     gr->Draw("same");
 
-    leg->AddEntry(gr,("x_{0}= "+x0s.at(i)+"X_{0}").Data(),"l");
-    //leg->AddEntry(gr,("#sigma^{2} = "+pars.at(i)).Data(),"l");
+    //leg->AddEntry(gr,("x_{0}= "+x0s.at(i)+"X_{0}").Data(),"l");
+    leg->AddEntry(gr,("#sigma^{2} = "+pars.at(i)).Data(),"l");
   }
 
   // Draw legend
   leg->Draw("same");
 
   // Save
-  c->SaveAs((savedir+"EfieldFromGaussians.png").Data());
+  //c->SaveAs((savedir+"EfieldFromGaussians.png").Data());
   //c->SaveAs((savedir+"EfieldFromGaussians_varHeight.png").Data());
-  //c->SaveAs((savedir+"EfieldFromGaussians_varWidth.png").Data());
+  c->SaveAs((savedir+"EfieldFromGaussians_varWidth.png").Data());
 }
 
 //----------------------------------------//

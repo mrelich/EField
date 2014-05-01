@@ -23,6 +23,7 @@ double e_ice = 88;// * e_0;
 double e_Al  = 10;// * e_0; 
 double e_Si  = 3.;
 double DEG_RAD = 57.2957795;
+double NPart = 15*1e-9/1.602e-19; // 15nC/e
 
 //
 //// Options
@@ -51,9 +52,9 @@ double E0 = 15; // MeV
 void TRAnalysis()
 {
 
-  //plotVsTheta(Al_Air);
+  plotVsTheta(Al_Air);
   //plotVsTheta(Air_Ice);
-  plotVsTheta(Air_Sand);
+  //plotVsTheta(Air_Sand);
   //plotVsTheta(Sand_Air);
   //plotVsTheta(Al_Sand);
 }
@@ -90,6 +91,8 @@ void plotVsTheta(int interface)
       minimum = y[n];
   }
 
+  //h->SetMaximum(3); //maximum*0.8);
+  //h->SetMinimum(-8); //minimum);
   h->SetMaximum(maximum*0.8);
   h->SetMinimum(minimum);
   h->Draw();
@@ -161,7 +164,10 @@ TF1* getFunc(int interface)
   func->SetParameters(1,1,1,1,1);
 
   // Set constants
-  double C = hbar*alpha/(pi*pi) * 3e8*(0.18-0.11)/0.18**2;
+  //double C = hbar*alpha/(pi*pi) * 3e8*(0.18-0.11)/0.18**2 * NPart;
+  //double C = hbar*alpha/(pi*pi) * NPart;
+  double C = hbar*alpha/(pi*pi) * NPart * 3e8 * (0.18-0.11) * 2 * pi;
+  cout<<"Npart; "<<NPart<<endl;
   double e1 = 0;
   double e2 = 0;
   double beta = Beta(); 

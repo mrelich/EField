@@ -7,8 +7,17 @@
 // Again, for reference we are followign arxiv:1106.6283.          //
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-//
 
+// My Goodies
 #include "Dim3.h"
+#include "Tools.h"
+
+// Extras
 #include <iostream>
+
+// Root stuff
+#include "TFile.h"
+#include "TProfile.h"
+#include "TGraph.h"
 
 class Analysis3D
 {
@@ -23,12 +32,12 @@ class Analysis3D
   // a fixed angle. Later build the electric field
   // from this result, similar to figure 3 in Jaime's
   // paper.
-  void PlotTimeDependence();
+  void PlotTimeDependence(TFile* outfile);
 
  private:
 
   Dim3* m_dim3;              // 3D analysis object
-
+  Tools* m_tool;             // Tool object
 };
 
 #endif

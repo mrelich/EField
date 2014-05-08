@@ -17,6 +17,9 @@ Analysis::Analysis()
   // Create 1-D Analysis object
   m_dim1 = new Dim1();
 
+  // Create tool object
+  m_tool = new Tools();
+
   // Create Tree analyzer
   m_treeAna = new TreeAnalyzer();
 
@@ -100,7 +103,7 @@ void Analysis::Average1DResult(TFile* outfile)
     
     // Get Profile
     TProfile* prof    = (TProfile*) infile->Get(pname.c_str()); 
-    vector<double> Qz = convert(prof);
+    vector<double> Qz = m_tool->convert(prof);
     double stepSize   = prof->GetBinWidth(1);
     
     // Delete profile and close file
@@ -184,25 +187,6 @@ void Analysis::Analytic1DResult(TFile* outfile)
     delete gr;    
 
   }// end loop over shower energies
-
-}
-
-//-----------------------------------------------//
-// Convert profile to vector
-//-----------------------------------------------//
-vector<double> Analysis::convert(TProfile* prof)
-{
-
-  // New vector
-  vector<double> steps;
-  
-  // Loop over bins and save
-  int nbins = prof->GetNbinsX();
-  for(int bin=1; bin<=nbins; ++bin)
-    steps.push_back( prof->GetBinContent(bin) );
-
-  // return converted result
-  return steps;
 
 }
 
@@ -332,7 +316,7 @@ int main(int argc, char** argv)
   outfile->Write();
   outfile->Close();
   delete outfile;
-
+  
   delete ana;  
   return 0;
   

@@ -27,7 +27,7 @@ Analysis.h	\
 Dim1.h 		\
 Physics.h
 
-Targets = analysis
+Targets = analysis dim3Ana
 
 all: Makefile $(Targets)
 
@@ -44,13 +44,23 @@ obj/%.so: $(src)/%.cxx
 #---- Additional Objects ----#
 obj/TreeAnalyzer.so:	$(inc)/TreeAnalyzer.h
 obj/Dim1.so:		$(inc)/Dim1.h 
+obj/Tools.so:		$(inc)/Tools.h
 obj/Analysis.so:	$(inc)/Analysis.h
+obj/Dim3.so:		$(inc)/Dim3.h
+obj/Analysis3D.so:	$(inc)/Analysis3D.h
 
 #---- Analysis Code ----#
 analysis: 			\
 	obj/TreeAnalyzer.so 	\
 	obj/Dim1.so		\
+	obj/Tools.so		\
 	obj/Analysis.so	
+	$(CXX) $+ -o $@ $(CXXFLAGS) $(LDFLAGS) $(links)
+
+dim3Ana:			\
+	obj/Dim3.so		\
+	obj/Tools.so		\
+	obj/Analysis3D.so	
 	$(CXX) $+ -o $@ $(CXXFLAGS) $(LDFLAGS) $(links)
 
 clean:

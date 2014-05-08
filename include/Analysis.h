@@ -10,6 +10,7 @@
 // My goodies
 #include "Dim1.h"
 #include "TreeAnalyzer.h"
+#include "Tools.h"
 
 // Root shiz
 #include "TFile.h"
@@ -56,6 +57,7 @@ class Analysis
  private:
   
   Dim1* m_dim1;            // 1*D ana object
+  Tools* m_tool;           // Tool object
   TreeAnalyzer* m_treeAna; // Analyze Tree object
 
   std::vector<std::string> m_fnames; // File names to consider

@@ -35,16 +35,17 @@ class Dim3
 
  private:
 
-  // Calculate the parameterized Fp following equation
-  // 17 in Jaime's paper.  This is the form factor that
-  // takes care of the lateral spread.
-  double getFp(double time,       // seconds
-	       double LQtot);     // L*Qtot
-
     
   // Calculate R*A(theta_C, t) following Jaime's 
   // parameterization given in equation 16.
-  double getRAatThetaC(double time); // t in seconds
+  double getRAatThetaC(double time);   // t in seconds
+
+  // Get the retarded time taking into account
+  // the longitudinal position of the shower
+  double getTRetarded(double time,   // seconds
+		      double z,      // m
+		      double v,      // m/s
+		      double theta); // radians
 
   // We need to calculate L*Qtot which is just the 
   // excess track length. Have a simple method to 

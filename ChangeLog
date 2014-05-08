@@ -1,3 +1,9 @@
+2014-05-08 Matt:
+	* Committing updated 3D parameterization which includes more simplified version
+	* TODO:
+		-- fix velocity of particles to c
+		-- add more modularity for running over differnt files
+
 2014-05-01 Matt:
 	* Committing some scripts that I forgot to a while ago. Now back to this project.
 	* Adding 3D parameterization and skeleton analysis code.

@@ -15,6 +15,7 @@ namespace Phys
   
   // Fundamental Constants
   //const double mur = 1.256627e-6; // Permeability of water -- ok for ice?
+  const double mu0 = 1.256637e-6; // permeability of free space
   const double mur = 0.999992;    // relative permeability of water from wikipedia
   const double e0  = 8.8541e-12;  // Permitivity of Free space
   const double c   = 2.99792e8;   // Speed of light m/s

@@ -18,12 +18,14 @@ double hbar  = 1.0545717e-34; // J s
 double alpha = 7.29735257e-3; // dimensionless
 double pi    = TMath::Pi();
 double e_0   = 8.854187817e-12;
-double e_air = 1.00058986;// * e_0;
-double e_ice = 88;// * e_0;
+double e_air = 1.00053; //1.00058986;// * e_0;
+double e_ice = 3.2;// * e_0;
 double e_Al  = 10;// * e_0; 
-double e_Si  = 3.;
+double e_Si  = 2.3; 
 double DEG_RAD = 57.2957795;
-double NPart = 15*1e-9/1.602e-19; // 15nC/e
+double fudge   = 1e11;
+double NPart = 15*1e-9/1.602e-19;// * fudge; // 15nC/e
+
 
 //
 //// Options
@@ -49,10 +51,11 @@ double E0 = 15; // MeV
 //-----------------------------------//
 // Main
 //-----------------------------------//
-void TRAnalysis()
+void TRAnalysis(int opt)
 {
 
-  plotVsTheta(Al_Air);
+  plotVsTheta(opt);
+  //plotVsTheta(Al_Air);
   //plotVsTheta(Air_Ice);
   //plotVsTheta(Air_Sand);
   //plotVsTheta(Sand_Air);
@@ -91,10 +94,10 @@ void plotVsTheta(int interface)
       minimum = y[n];
   }
 
-  //h->SetMaximum(3); //maximum*0.8);
-  //h->SetMinimum(-8); //minimum);
-  h->SetMaximum(maximum*0.8);
-  h->SetMinimum(minimum);
+  h->SetMaximum(3); //maximum*0.8);
+  h->SetMinimum(-8); //minimum);
+  //h->SetMaximum(maximum*0.8);
+  //h->SetMinimum(minimum);
   h->Draw();
 
   TGraph* gr = new TGraph(np,x,y);
@@ -116,7 +119,7 @@ Double_t myfunc(Double_t *x, Double_t *par)
   // par[3] = beta
   // par[4] = Deg-->Rad conversion factor
   
-  // Put angle in Radiants
+  // Put angle in Radians
   Double_t th = x[0]/par[4];
 
 
@@ -142,7 +145,7 @@ Double_t myfunc(Double_t *x, Double_t *par)
   else{ // sqrt is imaginary, need complex math
     Double_t phi = sqrt(e2*sin(th)*sin(th)-e1);
     Double_t z_num = sqrt(pow((e2-e1)*(1-B*B*e2),2) + pow(phi*B*(e2-e1),2));
-    Double_t z_den = sqrt(pow(e1*cos(th)-sqrt(e2)*phi*phi*B,2) +
+    Double_t z_den = sqrt(pow(e1*cos(th) + sqrt(e2)*phi*phi*B,2) +
 			  pow(sqrt(e2)*phi - e1*cos(th)*phi*B,2));
     Zeta_sq = pow(z_num/z_den,2);
   }
@@ -164,10 +167,8 @@ TF1* getFunc(int interface)
   func->SetParameters(1,1,1,1,1);
 
   // Set constants
-  //double C = hbar*alpha/(pi*pi) * 3e8*(0.18-0.11)/0.18**2 * NPart;
+  double C = hbar*alpha/(pi*pi) * 3e8*(0.18-0.11)/0.11**2 * NPart * NPart;
   //double C = hbar*alpha/(pi*pi) * NPart;
-  double C = hbar*alpha/(pi*pi) * NPart * 3e8 * (0.18-0.11) * 2 * pi;
-  cout<<"Npart; "<<NPart<<endl;
   double e1 = 0;
   double e2 = 0;
   double beta = Beta(); 
@@ -242,6 +243,10 @@ TH1F* dummy()
 double Beta()
 {
 
-  return sqrt(E0*E0/(E0*E0 + 0.511));
+  double m    = 0.511; // MeV
+  double beta = sqrt((E0*E0 - m*m)/(E0*E0));
+
+  cout<<"Beta: "<<beta<<endl;
+  return beta;
 
 }

@@ -32,37 +32,74 @@ Dim3::~Dim3()
 //-----------------------------------------------//
 // Calculate RA(theta,t)
 //-----------------------------------------------//
-double Dim3::getRA(double time, double theta,
-		   vector<double> Qz, double step)
+double Dim3::getRAFF(double time, double theta,
+		     vector<double> Qz, double step)
 {
 
   // First get LQtot given this particular 
   // charge distribution
   double LQtot = getLQtot(Qz,step);
-
+  
   // Calculate the constant
   double C = TMath::Sin(theta) / (LQtot * TMath::Sin(m_thetaC));
 
-  // Set the velocity. Might want to do this 
-  // dynamically based on energy.. think about
-  // it for a little
-  //double v = 0.99 * Phys::c;
-  double v = 0.95 * Phys::c;
+  // Fix velocity at speed of light for now
+  // When looking at ELS showers, will need
+  // to do this dynamically
+  double v = Phys::c;
   
   // Now the next process is to integrate and 
   // convolute the Fp part with charge distribution.
   double integral = 0;
   double z = 0, tR = 0, RA =0;
   for(uint i=0; i<Qz.size(); ++i){
-    z  = step * m_X0 * (i+1); // in m
-    tR = getTRetarded(time, z, v, theta);
+    z  = step * (i+1); // in m
+    tR = getTRetardedFF(time, z, v, theta);
     RA = getRAatThetaC(tR);
-    integral += step * m_X0 * Qz.at(i) * RA;
-    //cout<<"Z: "<<z<<" tr: "<<tR<<" RA: "<<RA<<" C: "<<C<<endl;
+    integral += step * Qz.at(i) * RA;
   }
 
+  
   //cout<<"\t Result: "<<fabs(C*integral)<<endl;
+  
+  // Now we can return the result
+  return fabs(C * integral);
+  
+}
 
+//-----------------------------------------------//
+// Calculate |A(r,z,t)| for near-field
+//-----------------------------------------------//
+double Dim3::getANF(double time, double zObs, double rObs,
+		    vector<double> Qz, double step)
+{
+
+  // First get LQtot given this particular 
+  // charge distribution.
+  double LQtot = getLQtot(Qz,step);
+  
+  // Calculate the constant
+  //double C = Phys::mur * Phys::mu0 / (4 * Phys::pi);
+  double C = 1/(LQtot*TMath::Sin(m_thetaC)); 
+
+  // Set the velocity. Might want to do this 
+  // dynamically based on energy.. think about
+  // it for a little
+  double v = Phys::c;
+  
+  // Now the next process is to integrate and 
+  // convolute the Fp part with charge distribution.
+  double integral = 0;
+  double z=0, tR=0, RA=0, denom=0, magp=0;  
+  for(uint i=0; i<Qz.size(); ++i){
+    z         = step * (i+1); // in m
+    tR        = getTRetardedNF(time, zObs, z, rObs, v);
+    RA        = getRAatThetaC(tR);
+    denom     = 1/TMath::Sqrt(rObs*rObs+pow(zObs-z,2)); 
+    magp      = rObs/TMath::Sqrt(rObs*rObs+pow(zObs-z,2));
+    integral += step * Qz.at(i) * RA * denom * magp;
+  }
+  
   // Now we can return the result
   return fabs(C * integral);
   
@@ -76,10 +113,10 @@ double Dim3::getRAatThetaC(double time)
 {
   
   // Get constant term
-  double C = -4.5*pow(10,-14) * m_showerE;
+  double C = -4.5e-14 * m_showerE;
 
   // Put time into ns
-  double t = time * pow(10,9);
+  double t = time * 1e9;
   
   // Get piecewise portion
   double tDep = 0;
@@ -94,15 +131,29 @@ double Dim3::getRAatThetaC(double time)
 }
 
 //-----------------------------------------------//
-// Get the retarded time
+// Get the retarded time for far-field
 //-----------------------------------------------//
-double Dim3::getTRetarded(double time, double z, 
-		    double v, double theta)
+double Dim3::getTRetardedFF(double time, double z, 
+			    double v, double theta)
 {
+  return time + z/v - z*Phys::nICE*TMath::Cos(theta)/Phys::c;
+}
 
-  // Want to return t - z[1/v - ncos(th)/c]
-  return time - z * (1/v - Phys::nICE*TMath::Cos(theta)/Phys::c);
+//-----------------------------------------------//
+// Get the retarded time for near-field
+//-----------------------------------------------//
+double Dim3::getTRetardedNF(double time, double zObs, 
+			    double zShower, double rObs,
+			    double v)
+{
+  
+  double n  = Phys::nICE;
+  double c  = Phys::c;
 
+  double tR = time - zShower/v;
+  tR -= n*TMath::Sqrt(rObs*rObs + pow(zObs-zShower,2))/c;
+  
+  return tR;
 }
 
 //-----------------------------------------------//
@@ -113,10 +164,12 @@ double Dim3::getLQtot(vector<double> Qz,
 		      double step)
 {
   
-  // Just simply integrate and return the total
+  // Just simply integrate and return the total...
   double tot = 0;
-  for(uint i=0; i<Qz.size(); ++i)
-    tot += step * m_X0 * Qz.at(i);
+  for(uint i=0; i<Qz.size(); ++i){
+    //tot += step * m_X0 * Qz.at(i);
+    tot += step * Qz.at(i);
+  }
 
   // Return the integral
   return tot;

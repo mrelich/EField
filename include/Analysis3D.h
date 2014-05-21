@@ -13,11 +13,16 @@
 
 // Extras
 #include <iostream>
+#include <utility>
+#include <vector>
+#include <sstream>
 
 // Root stuff
 #include "TFile.h"
 #include "TProfile.h"
 #include "TGraph.h"
+
+typedef unsigned int uint;
 
 class Analysis3D
 {
@@ -32,8 +37,19 @@ class Analysis3D
   // a fixed angle. Later build the electric field
   // from this result, similar to figure 3 in Jaime's
   // paper.
-  void PlotTimeDependence(TFile* outfile);
+  void PlotTimeDependence(TFile* outfile, TFile* infile);
 
+  // Now want to plot vector potential versus time
+  // for the near-field. I will try to reproduce 
+  // results in figure 5.
+  void PlotNearField(TFile* outfile, TFile* infile);
+
+  // Now want to plot vector potential versus time
+  // for the near-field. In this function I fix for
+  // specific angle. I want to see comparison with
+  // far-field prediction
+  void PlotNearFieldFixedAngle(TFile* outfile, TFile* infile);
+  
  private:
 
   Dim3* m_dim3;              // 3D analysis object

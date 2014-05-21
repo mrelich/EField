@@ -1,3 +1,10 @@
+2014-05-21 Matt;
+	* Added runtime options for analysis
+	* Added now option to check R dependence of vector potential
+	* Verified methods for near and far field approximations given by Jaime.
+	* TODO:
+		-- Combine this package with EventMixer
+
 2014-05-08 Matt:
 	* Committing updated 3D parameterization which includes more simplified version
 	* TODO:

@@ -6,6 +6,8 @@
 // parameterized version of the 3D shower given a charge excess //
 // profile from either ZHS or G4.  The calculation is based on  //
 // Jaime Alvarez Muniz's paper: arxiv:1106.6283                 //
+//                                                              //
+// Below FF = far-field and NF = near-field                     //
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=// 
 
 #include "TMath.h"
@@ -26,10 +28,20 @@ class Dim3
   // potnetial following equation 17 given the N 
   // particle distribution, the time,  and some angle 
   // theta
-  double getRA(double time,             // seconds
-	       double theta,            // radians
-	       std::vector<double> Qz,  // longitudinal distribution
-	       double step);            // step size in rad lengths
+  double getRAFF(double time,             // seconds
+		 double theta,            // radians
+		 std::vector<double> Qz,  // longitudinal distribution
+		 double step);            // step size in rad lengths
+
+  // Get the near-field approximation following equation 22
+  // given in Jaime's paper. Unlike the far-field, the user
+  // will need to specify more parameters, including the exact
+  // location of the obersvers
+  double getANF(double time,             // seconds
+		double zObs,             // observer z position
+		double rObs,             // observer r position
+		std::vector<double> Qz,  // longitudinal distribution
+		double step);            // step size in rad lengths
   
     
 
@@ -42,10 +54,20 @@ class Dim3
 
   // Get the retarded time taking into account
   // the longitudinal position of the shower
-  double getTRetarded(double time,   // seconds
-		      double z,      // m
-		      double v,      // m/s
-		      double theta); // radians
+  // for the far-field approximation
+  double getTRetardedFF(double time,   // seconds
+			double z,      // m
+			double v,      // m/s
+			double theta); // radians
+  
+  // Get the retarded time for the near-field
+  // approximation following the arguments for Fp
+  // given in equation 22.
+  double getTRetardedNF(double time,    // seconds
+			double zObs,    // observer z pos [m]
+			double zShower, // shower z [m]
+			double rObs,    // observer r pos [m]
+			double v);      // shower velocity [m/s]
 
   // We need to calculate L*Qtot which is just the 
   // excess track length. Have a simple method to 

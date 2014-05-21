@@ -9,6 +9,23 @@
 #include <vector>
 
 //------------------------------------------------------------//
+// Get a graph from file and format
+//------------------------------------------------------------//
+TGraph* getGraph(TFile* file, TString pname, TString xtitle,
+		 TString ytitle, int color)
+{
+
+  TGraph* gr = (TGraph*) file->Get(pname.Data());
+  gr->SetTitle("");
+  gr->GetXaxis()->SetTitle(xtitle.Data());
+  gr->GetYaxis()->SetTitle(ytitle.Data());
+  gr->SetLineColor(color);
+  
+  return gr;
+
+}
+
+//------------------------------------------------------------//
 // Make TLatex
 //------------------------------------------------------------//
 TLatex* makeLatex()
